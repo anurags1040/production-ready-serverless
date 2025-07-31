@@ -1,0 +1,24 @@
+{
+  "name": "production-ready-serverless-workshop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+  "test": "vitest"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.840.0",
+    "@aws-sdk/credential-providers": "^3.840.0",
+    "@aws-sdk/lib-dynamodb": "^3.840.0",
+    "cheerio": "^1.1.2",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.1.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
