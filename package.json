@@ -19,6 +19,9 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "@aws-sdk/client-dynamodb": "^3.840.0",
+    "@aws-sdk/credential-providers": "^3.840.0",
+    "@aws-sdk/lib-dynamodb": "^3.840.0"
   }
 }
