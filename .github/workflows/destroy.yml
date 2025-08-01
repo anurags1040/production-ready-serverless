@@ -5,6 +5,9 @@ on:
 jobs:
     destroy:
       runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+        contents: write
       steps:
         - uses: actions/checkout@v3
         - uses: actions/setup-node@v3
@@ -20,6 +23,10 @@ jobs:
             aws-region: us-east-1
             role-to-assume: arn:aws:iam::684212469706:role/GithubActionsRole-arg
             role-session-name: GithubActionsSession
+
+        - name: npm ci
+          run: npm ci    
+          
         - name: terraform init
           run: |
             cd terraform
