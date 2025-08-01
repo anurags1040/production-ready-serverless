@@ -1,0 +1,30 @@
+# .github/workflows/destroy.yml
+on:
+    workflow_dispatch:  # Only runs when manually triggered
+  
+jobs:
+    destroy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version: '20'
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+          with:
+            terraform_version: '1.10.3'
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-region: us-east-1
+            role-to-assume: arn:aws:iam::684212469706:role/GithubActionsRole-arg
+            role-session-name: GithubActionsSession
+        - name: terraform init
+          run: |
+            cd terraform
+            terraform init -backend-config=config/dev.backend.hcl
+        - name: destroy infra
+          run: |
+            cd terraform
+            terraform destroy -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev" -var "service_name=prsls-tf-argsharma"
