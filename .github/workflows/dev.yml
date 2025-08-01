@@ -44,8 +44,7 @@ jobs:
       - name: create temp envrionment "dev-ci"
         run: |
           cd terraform
-          terraform workspace new dev-ci
-          terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
+          terraform workspace list | grep -q 'dev-ci' && terraform workspace select dev-ci || terraform workspace new dev-ci
           terraform output > ../.env
           
       - name: seed test data
@@ -59,6 +58,7 @@ jobs:
       #   run: npm run test:e2e
           
       - name: destroy temp envrionment "dev-ci"
+        if: always()
         run: |
           cd terraform
           terraform destroy -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
