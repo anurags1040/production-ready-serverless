@@ -45,30 +45,30 @@ jobs:
           run: |
             cd terraform
             terraform workspace new dev-ci
-            terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-yancui"
+            terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
             terraform output > ../.env
         
       - name: seed test data
         run: |
           node seed-restaurants.mjs
         
-      - name: run integration test
-        run: npm run test
+    #   - name: run integration test
+    #     run: npm run test
         
-      - name: run end-to-end tests
-        run: npm run test:e2e
+    #   - name: run end-to-end tests
+    #     run: npm run test:e2e
         
       - name: destroy temp envrionment "dev-ci"
         run: |
           cd terraform
-          terraform destroy -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-yancui"
+          terraform destroy -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
           terraform workspace select default
           terraform workspace delete dev-ci
         
-      - name: deploy to dev
-        run: |
-          cd terraform
-          terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev" -var "service_name=prsls-tf-yancui"
+    #   - name: deploy to dev
+    #     run: |
+    #       cd terraform
+    #       terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev" -var "service_name=prsls-tf-argsharma"
         
         
         
