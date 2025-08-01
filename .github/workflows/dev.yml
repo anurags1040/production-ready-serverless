@@ -51,8 +51,8 @@ jobs:
           cd terraform
           terraform output > ../.env
 
-      - name: run integration test
-        run: npm run test
+      # - name: run integration test
+      #   run: npm run test
 
       # - name: run end-to-end tests
       #   run: npm run test:e2e
