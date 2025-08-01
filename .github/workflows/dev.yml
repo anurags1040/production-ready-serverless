@@ -30,7 +30,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::684212469706:oidc-provider/token.actions.githubusercontent.com
+          role-to-assume: arn:aws:iam::684212469706:role/GithubActionsRole-arg
           role-session-name: GithubActionsSession
 
       - name: npm ci
