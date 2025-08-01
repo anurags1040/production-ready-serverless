@@ -41,12 +41,12 @@ jobs:
           cd terraform
           terraform init -backend-config=config/dev.backend.hcl
 
-          - name: create temp envrionment "dev-ci"
-          run: |
-            cd terraform
-            terraform workspace new dev-ci
-            terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
-            terraform output > ../.env
+      - name: create temp envrionment "dev-ci"
+        run: |
+         cd terraform
+         terraform workspace new dev-ci
+         terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
+         terraform output > ../.env
         
       - name: seed test data
         run: |
