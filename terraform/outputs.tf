@@ -11,3 +11,13 @@ output "restaurants_table" {
   description = "The name of the restaurants table"
   value       = "${module.dynamodb_restaurants_table.dynamodb_table_id}"
 }
+
+output "stage_name" {
+  description = "Stage name"
+  value       = "${var.stage_name}"
+}
+
+output "service_name" {
+  description = "Service name"
+  value       = "${var.service_name}"
+}

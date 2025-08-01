@@ -57,23 +57,38 @@ module "get_restaurants_lambda" {
   timeout       = 6
 
   source_path = [{
-    path = "${path.module}/../functions/get-restaurants"
+    path = "${path.module}/../functions/get-restaurants",
+    commands = [
+      "rm -rf node_modules",
+      "npm ci --omit=dev",
+      ":zip"
+    ]
   }]
 
   environment_variables = {
-    default_results = "8"
     restaurants_table = module.dynamodb_restaurants_table.dynamodb_table_id
+    service_name = var.service_name
+    stage_name = var.stage_name
   }
 
   attach_policy_statements = true
   policy_statements = {
     dynamodb_read = {
       effect = "Allow"
-      actions = [      
+      actions = [
         "dynamodb:Scan"
       ]
       resources = [module.dynamodb_restaurants_table.dynamodb_table_arn]
-    }    
+    }
+    ssm_access = {
+      effect = "Allow"
+      actions = [
+        "ssm:GetParameters*"
+      ]
+      resources = [
+        "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.service_name}/${var.stage_name}/get-restaurants/config"
+      ]
+    }
   }
 
   publish = true
@@ -99,12 +114,18 @@ module "search_restaurants_lambda" {
   timeout       = 6
 
   source_path = [{
-    path = "${path.module}/../functions/search-restaurants"
+    path = "${path.module}/../functions/search-restaurants",
+    commands = [
+      "rm -rf node_modules",
+      "npm ci --omit=dev",
+      ":zip"
+    ]
   }]
 
   environment_variables = {
-    default_results = "8"
     restaurants_table = module.dynamodb_restaurants_table.dynamodb_table_id
+    service_name = var.service_name
+    stage_name = var.stage_name
   }
 
   attach_policy_statements = true
@@ -115,7 +136,16 @@ module "search_restaurants_lambda" {
         "dynamodb:Scan"
       ]
       resources = [module.dynamodb_restaurants_table.dynamodb_table_arn]
-    }    
+    }
+    ssm_access = {
+      effect = "Allow"
+      actions = [
+        "ssm:GetParameters*"
+      ]
+      resources = [
+        "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.service_name}/${var.stage_name}/search-restaurants/config"
+      ]
+    }
   }
 
   publish = true
@@ -129,5 +159,3 @@ module "search_restaurants_lambda" {
 
   cloudwatch_logs_retention_in_days = 7
 }
-
-

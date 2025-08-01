@@ -1,3 +1,6 @@
+import middy from '@middy/core'
+import ssm from '@middy/ssm'
+
 import fs from 'fs'
 import Mustache from 'mustache'
 import { AwsClient } from 'aws4fetch'
