@@ -47,9 +47,9 @@ jobs:
           tfsec terraform/ --soft-fail --format sarif --out results.sarif
 
       - name: Upload SARIF to GitHub
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: terraform/results.sarif
+          sarif_file: results.sarif
    
       - name: create temp envrionment "dev-ci"
         id: create_env
