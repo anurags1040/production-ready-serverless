@@ -40,6 +40,16 @@ jobs:
         run: |
           cd terraform
           terraform init -backend-config=config/dev.backend.hcl
+
+      - name: Run tfsec scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
+     
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
   
       - name: create temp envrionment "dev-ci"
         run: |
