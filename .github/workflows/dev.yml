@@ -41,23 +41,31 @@ jobs:
           cd terraform
           terraform init -backend-config=config/dev.backend.hcl
 
-      - name: Run tfsec scan
-        uses: aquasecurity/tfsec-action@v1.0.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
-     
+      - name: tfsec - scan Terraform code
+        run: |
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+          tfsec terraform/ --soft-fail --format sarif --out results.sarif
+
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: results.sarif
-  
+          sarif_file: terraform/results.sarif
+   
       - name: create temp envrionment "dev-ci"
+        id: create_env
         run: |
+          set -e
           cd terraform
-          terraform workspace list | grep -q 'dev-ci' && terraform workspace select dev-ci || terraform workspace new dev-ci
+          if terraform workspace list | grep -q 'dev-ci'; then
+           terraform workspace select dev-ci
+          else
+           terraform workspace new dev-ci
+          fi
           terraform output > ../.env
+          echo "should_continue=true" >> $GITHUB_OUTPUT
           
       - name: seed test data
+        if: steps.create_env.outputs.should_continue == 'true'
         run: |
           node seed-restaurants.mjs
           
@@ -68,7 +76,7 @@ jobs:
       #   run: npm run test:e2e
           
       - name: destroy temp envrionment "dev-ci"
-        if: always()
+        if: steps.create_env.outputs.should_continue == 'true'
         run: |
           cd terraform
           terraform destroy -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev-ci" -var "service_name=prsls-tf-argsharma"
@@ -76,6 +84,7 @@ jobs:
           terraform workspace delete dev-ci
           
       - name: deploy to dev
+        if: steps.create_env.outputs.should_continue == 'true'
         run: |
           cd terraform
           terraform apply -auto-approve -var "aws_region=us-east-1" -var "stage_name=dev" -var "service_name=prsls-tf-argsharma"
